@@ -23,7 +23,6 @@ for u in uri_list do
   begin
     response = Net::HTTP.get_response(uri).body.force_encoding(Encoding::UTF_8)
     vacancy = /(\d+) ваканси[йя] на jobs.dev.by/.match(response) || /Все вакансии \((\d+)\)/.match(response) || '00'
-    i += 1
     if vacancy != '00' 
       hash[u] = vacancy[1]
     else
@@ -31,8 +30,9 @@ for u in uri_list do
     end
   rescue Errno::ECONNREFUSED => error
     puts "Error: #{error}"
-    i += 1
     next
+  ensure
+    i += 1
   end
 end
 
